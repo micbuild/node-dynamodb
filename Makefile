@@ -1,7 +1,7 @@
-STAGE?=dev
+STAGE?=leifnamb
 IMAGE?=$(shell basename `pwd`)
 TAG?=latest
-DOCKER_REGISTRY?=registry.hub.docker.com
+DOCKER_REGISTRY?=docker.io
 
 echo:
 	@echo "TAG = $(TAG)"
