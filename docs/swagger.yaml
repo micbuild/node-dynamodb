@@ -1,0 +1,81 @@
+openapi: 3.0.0
+info:
+  description: "Pinemarket Server"
+  version: "0.0.1"
+  title: "Pinemarket"
+tags:
+- name: "Healthcheck"
+  description: "Healthcheck API"
+- name: "Inflights"
+  description: "Inflights API"
+components:
+  securitySchemes:
+    bearerAuth:            # arbitrary name for the security scheme
+      type: http
+      scheme: bearer
+      bearerFormat: JWT    # optional, arbitrary value for documentation purposes
+# 2) Apply the security globally to all operations
+security:
+  - bearerAuth: []         # use the same name as above
+paths:
+  /healthcheck:
+    get:
+      tags:
+        - "Healthcheck"
+      summary: "Get current health condition"
+      produces:
+        - "application/json"
+      responses:
+        200:
+          description: "Successful"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+  /account:
+    post:
+      tags:
+        - "Inflights"
+      summary: "Create an nflight transaction"
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                data:
+                  type: object
+                  properties:
+                    inflightTypeCode:
+                      type: string
+                      required: true
+                    productId:
+                      type: string
+                      required: true
+                    peerProductId:
+                      type: string
+                    numberOfUnits:
+                      type: number
+                      format: float
+                    grossTransactionAmount:
+                      type: number
+                      format: float
+      responses:
+        201:
+          description: "Successful"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: string
