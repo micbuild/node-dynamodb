@@ -16,7 +16,7 @@ const schema = require('./schema');
 
 const router = Router();
 
-const path = 'project/ccb';
+const path = 'project/cbc';
 
 router.post(
   `/${path}`,
