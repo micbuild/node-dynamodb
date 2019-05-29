@@ -9,7 +9,8 @@ const {
   connectors: { BaseMongoConnector }
 } = require('@leif.nambara/mongo-connector');
 
-const DbConnector = require('./connectors/db');
+const auth = require('../common/auth');
+
 const Model = require('./model');
 
 const schema = require('./schema');
@@ -21,6 +22,7 @@ const path = 'project/cbc';
 router.post(
   `/${path}`,
   bodyParser.json(),
+  auth.preRequest,
   schemaValidationGenerator(schema),
   mongoMiddlewares.preRequest,
   async (req, res, next) => {
@@ -29,7 +31,7 @@ router.post(
       const {
         locals: {
           logger, mongodb,
-          // auth: { sub },
+          auth: { sub },
           schemaConvertionResult: { body }
         }
       } = res;
@@ -44,7 +46,7 @@ router.post(
       const model = new Model({ logger, connectors });
 
       const id = await model.create({
-        // customerId: sub,
+        userId: sub,
         ...body
       });
       res.status(CREATED).send({ id });

@@ -18,6 +18,7 @@ const configMiddleware = require('./common/config/middleware');
 const docsRoute = require('./common/docs/route');
 
 const post = require('./post');
+const codeLogin = require('./codeLogin');
 
 const app = express();
 
@@ -42,6 +43,7 @@ app.use(healthcheck);
 /* routes */
 app.use(docsRoute);
 app.use(post);
+app.use(codeLogin);
 /* routes */
 
 /* middlewares - post routes */
