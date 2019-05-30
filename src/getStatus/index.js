@@ -1,6 +1,6 @@
 const { Router } = require('express');
 const bodyParser = require('body-parser');
-const { CREATED } = require('http-status');
+const { OK } = require('http-status');
 
 const schemaValidationGenerator = require('@leif.nambara/express-schema-validation');
 
@@ -11,13 +11,14 @@ const {
 
 const auth = require('../common/auth');
 
+const CbcDbConnector = require('./connectors/db/cbc');
 const Model = require('./model');
 
 const schema = require('./schema');
 
 const router = Router();
 
-const path = 'project/cbc';
+const path = 'project/getStatus';
 
 router.post(
   `/${path}`,
@@ -37,19 +38,26 @@ router.post(
       } = res;
 
       const connectors = {
-        db: new BaseMongoConnector({
-          logger,
-          db: mongodb.db(process.env.MONGO_DB_NAME || 'project'),
-          collectionName: process.env.MONGO_DB_CBC_COLLECTION_NAME || 'cbc'
-        })
+        db: {
+          cbc: new CbcDbConnector({
+            logger,
+            db: mongodb.db(process.env.MONGO_DB_NAME || 'project'),
+            collectionName: process.env.MONGO_DB_CBC_COLLECTION_NAME || 'cbc'
+          }),
+          markers: new BaseMongoConnector({
+            logger,
+            db: mongodb.db(process.env.MONGO_DB_NAME || 'project'),
+            collectionName: process.env.MONGO_DB_MARKER_COLLECTION_NAME || 'markers'
+          })
+        }
       };
       const model = new Model({ logger, connectors });
 
-      const id = await model.create({
+      const result = await model.get({
         userId: sub,
         ...body
       });
-      res.status(CREATED).send({ id });
+      res.status(OK).send(result);
     } catch (e) {
       err = e;
     }
