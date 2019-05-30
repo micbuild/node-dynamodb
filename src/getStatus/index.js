@@ -57,7 +57,14 @@ router.post(
         userId: sub,
         ...body
       });
-      res.status(OK).send({ status: !!result, data: { dt: new Date().toISOString(), body: result } });
+      res.status(OK).send({
+        success: !!result,
+        data: {
+          status: 'complete',
+          dt: new Date().toISOString(),
+          body: result
+        }
+      });
     } catch (e) {
       err = e;
     }
