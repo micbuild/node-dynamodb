@@ -57,7 +57,7 @@ router.post(
         userId: sub,
         ...body
       });
-      res.status(OK).send(result);
+      res.status(OK).send({ status: !!result, dt: new Date().toISOString(), body: result });
     } catch (e) {
       err = e;
     }
