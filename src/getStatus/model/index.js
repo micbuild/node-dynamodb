@@ -34,7 +34,6 @@ class Model {
 
   async get(args) {
     const dbResults = await this.connectors.db.cbc.listCbc(args);
-    if(!dbResults.length) return null;
 
     const [marker, prevMarker]  = dbResults.map(res => {
       return {
@@ -51,10 +50,12 @@ class Model {
       }
     });
 
-    let GoodPart = []
-    let AttentionPart = []
-    let RiskPart = []
-    let UndefinedPart = []
+    if(!marker) return [];
+
+    let GoodPart = [];
+    let AttentionPart = [];
+    let RiskPart = [];
+    let UndefinedPart = [];
 
     for(let markerName of Object.keys(marker)) {
       const [markerDefinitions] = await this.connectors.db.markers.list({ name: markerName });
