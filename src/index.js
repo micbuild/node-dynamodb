@@ -20,6 +20,7 @@ const docsRoute = require('./common/docs/route');
 const post = require('./post');
 const getStatus = require('./getStatus');
 const codeLogin = require('./codeLogin');
+const postOrders = require('./postOrders');
 
 const app = express();
 
@@ -46,6 +47,7 @@ app.use(docsRoute);
 app.use(post);
 app.use(getStatus);
 app.use(codeLogin);
+app.use(postOrders);
 /* routes */
 
 /* middlewares - post routes */
