@@ -21,6 +21,7 @@ const post = require('./post');
 const getStatus = require('./getStatus');
 const codeLogin = require('./codeLogin');
 const postOrders = require('./postOrders');
+const getOrders = require('./getOrders');
 
 const app = express();
 
@@ -48,6 +49,7 @@ app.use(post);
 app.use(getStatus);
 app.use(codeLogin);
 app.use(postOrders);
+app.use(getOrders);
 /* routes */
 
 /* middlewares - post routes */
