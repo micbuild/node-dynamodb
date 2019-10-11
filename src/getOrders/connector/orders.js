@@ -29,7 +29,10 @@ class OrderConnector extends BaseMongoConnector {
         query.createdAt.$gte = after;
       }
 
-      result = await this.collection.find(query, { limit, skip: offset }).toArray();
+      result = await this.collection.find(query, {
+        limit, skip: offset,
+        sort: [['createdAt', 'desc']]
+      }).toArray();
     } catch (e) {
       this._errorHandler(e);
     }

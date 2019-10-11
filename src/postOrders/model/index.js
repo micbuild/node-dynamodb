@@ -9,15 +9,24 @@ class Model {
       type
     } = args;
 
-    let product;
+    let id;
     if (type === 'subscription') {
-      product = await this.connectors.stripe.getProduct({ productId });
+      const product = await this.connectors.stripe.getProduct({ productId });
+      id = await this.connectors.db.insert({
+        productName: product ? product.name : undefined,
+        ...args
+      });
     }
 
-    const id = await this.connectors.db.insert({
-      productName: product ? product.name : undefined,
-      ...args
-    });
+    if (type === 'onetime') {
+      const customer = await this.connectors.stripe.getCustomer({ customerId: args.customer });
+      id = await this.connectors.db.insert({
+        shippingAddress: customer.shipping.address,
+        email: customer.email,
+        productId: args.productName,
+        ...args
+      });
+    }
 
     return id;
   }

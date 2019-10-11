@@ -1,6 +1,7 @@
 const { Router } = require('express');
 const bodyParser = require('body-parser');
 const { CREATED } = require('http-status');
+const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY); //'sk_test_QwUSDVd9AYBQmOLJavAmAEeF');
 
 const {
   middlewares: { express: mongoMiddlewares }
@@ -8,6 +9,7 @@ const {
 const schemaValidationGenerator = require('@leif.nambara/express-schema-validation');
 
 const OrderConnector = require('./connector/orders');
+const StripeConnector = require('./connector/stripe');
 const schema = require('./schema');
 const Model = require('./model');
 
@@ -28,6 +30,7 @@ router.get(
       } = res;
 
       const connectors = {
+        stripe: new StripeConnector({ stripe }),
         db: new OrderConnector({
           logger,
           db: mongodb.db(process.env.MONGO_DB_NAME || 'project'),

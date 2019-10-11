@@ -28,7 +28,14 @@ class OrderConnector extends BaseMongoConnector {
         query.createdAt.$gte = after;
       }
 
-      result = await this.collection.find(query, { limit, skip: offset }).toArray();
+      const dbResult = await this.collection.find(query, {
+        limit, skip: offset,
+        sort: [['createdAt', 'desc']]
+      }).toArray();
+      result = dbResult.map(item => ({
+        ...item,
+        orderId: item._id
+      }));
     } catch (e) {
       this._errorHandler(e);
     }
